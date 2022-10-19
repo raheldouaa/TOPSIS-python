@@ -1,0 +1,142 @@
+//RAHEL douaa 
+//Master Data Science
+//Semester 1
+
+
+ALGORITME Topsis
+Declaration des variables
+
+    decision_matrix : tableau de M x N reel;
+    normalize_decision_matrix : tableau de M x N reel;
+
+    weights : tableau de N reel;
+    weighted_decision_matrix : tableau de M reel ;
+
+    criterias : tableau de N reel;
+    Positive_Ideal_Solutions : tableau de N reel;
+    Positive_Ideal : reel;
+    Negative_Ideal_Solutions : tableau de N reel;
+    Negative_Ideal : reel;
+
+    Positive_Si : tableau de M reel;
+    Negative_Si : tableau de M reel;
+
+    closeness : tableau de M reel;
+
+    i : entier;
+    j : entier;
+    val : reel;
+
+Debut
+
+    // Normalize Decision Matrix
+
+    Pour j <- de 0 à N faire
+
+        val <- 0
+        Pour i <- de 0 à M faire
+            val <- val + pow(decision_matrix[i][j]);
+        Fin_Pour 
+        Pour i <- de 0 à M faire
+            normalize_decision_matrix[i][j] <- decision_matrix[i][j] / sqrt(val);
+        Fin_Pour 
+    Fin_Pour 
+    
+    //weighted decision matrix
+    //produit de 2 matices ____ Normalize decision matrix X weights
+
+    Pour i <- de 0 à M faire
+        Pour j <- de 0 à N faire
+            weighted_decision_matrix[i][j] <- 0;
+            Pour k <- de 0 à N faire
+                weighted_decision_matrix[i][j] <- weighted_decision_matrix[i][j] + normalize_decision_matrix[i][k] * weights[k];
+            Fin_Pour 
+        Fin_Pour 
+    Fin_Pour 
+            
+
+    //Determine the positive ideal and negative ideal solutions
+
+    Pour i <- de 0 à N faire
+        Si (criterias[i] == 1)
+            Positive_Ideal <- max(weighted_decision_matrix);
+            Negative_Ideal <- min(weighted_decision_matrix);
+
+            Positive_Ideal_Solutions[i] <- Positive_Ideal;
+            Negative_Ideal_Solutions[i] <- Negative_Ideal;
+        Fin_Si
+
+        Si (criterias[i] == 0)
+            Positive_Ideal <- min(weighted_decision_matrix);
+            Negative_Ideal <- max(weighted_decision_matrix);
+
+            Positive_Ideal_Solutions[i] <- Positive_Ideal;
+            Negative_Ideal_Solutions[i] <- Negative_Ideal;
+        Fin_Si
+    Fin_Pour
+
+    //Euclidean distance
+
+    Pour i <- de 0 à M faire
+        Pour j <- de 0 à N faire
+            Positive_Si[i]<- 0;
+            Pour k <- de 0 à N faire
+                Positive_Si[i] <- Positive_Si[i] + (Positive_Ideal_Solutions[k] - normalize_decision_matrix[i][k]);
+                Positive_Si[i] <- sqrt (Positive_Si[i]);
+            Fin_Pour 
+        Fin_Pour 
+    Fin_Pour 
+    
+
+    Pour i <- de 0 à M faire
+        Pour j <- de 0 à N faire
+            Negative_Si[i] <- 0;
+            Pour k <- de 0 à N faire
+                Negative_Si[i] <- Negative_Si[i] + (Negative_Ideal_Solutions[k] - normalize_decision_matrix[i][k]);
+                Negative_Si[i] <- sqrt ( Negative_Si[i]);
+            Fin_Pour 
+        Fin_Pour 
+    Fin_Pour     
+
+    //closeness ideal solution
+
+    Pour i <- de 0 à M faire
+        closeness[i] <- Negative_Si[i] / (Negative_Si[i] + Positive_Si[i]);
+    Fin_Pour
+
+Fin
+
+Fonction max (tab , m):reel
+Declaration des variables
+    max : reel;
+Debut
+    max <- tab[i];
+
+    Pour i <- de 0 à m faire
+        Si(max < tab[i])
+            max <- tab[i];
+        Fin_Si
+    Fin_Pour
+
+    retourner max
+Fin
+
+
+Fonction min (tab , m):reel
+Declaration des variables
+    min : reel;
+Debut
+    min <- tab[i];
+
+    Pour i <- de 0 à m faire
+        Si(min < tab[i])
+            min <- tab[i];
+        Fin_Si
+    Fin_Pour
+
+    retourner min
+Fin
+
+
+
+18397376
